@@ -1,360 +1,562 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
   BriefcaseBusiness,
-  HardHat,
-  Settings,
-  ShieldCheck,
-  Users,
-  Wrench,
+  CalendarDays,
+  GraduationCap,
+  Loader2,
+  MapPin,
+  RefreshCw,
 } from "lucide-react";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-const departments = [
-  {
-    number: "01",
-    icon: Settings,
-    title: "Engineering",
-    description:
-      "Engineering, detailing and technical coordination supporting structural and industrial project requirements.",
-  },
-  {
-    number: "02",
-    icon: Wrench,
-    title: "Fabrication",
-    description:
-      "Workshop roles involved in fabrication, production coordination and structural steel execution.",
-  },
-  {
-    number: "03",
-    icon: HardHat,
-    title: "Site Execution",
-    description:
-      "Site teams coordinating structural erection, project activities and field execution.",
-  },
-  {
-    number: "04",
-    icon: ShieldCheck,
-    title: "Quality & Safety",
-    description:
-      "Roles supporting quality inspection, process control and responsible site practices.",
-  },
-];
+/* =========================================================
+   API
+========================================================= */
 
-const workPrinciples = [
-  {
-    number: "01",
-    title: "Responsibility",
-    text: "Take ownership of the work and understand how your contribution affects project execution.",
-  },
-  {
-    number: "02",
-    title: "Teamwork",
-    text: "Engineering, fabrication and site teams work together to solve practical project challenges.",
-  },
-  {
-    number: "03",
-    title: "Learning",
-    text: "Build technical knowledge through practical exposure to industrial engineering and execution.",
-  },
-  {
-    number: "04",
-    title: "Safety",
-    text: "Responsible working practices remain an essential part of workshop and site activities.",
-  },
-];
+const API_URL =
+  "https://backend.spsengineeringsolutions.site/api/careers/";
+
+/* =========================================================
+   TYPES
+========================================================= */
+
+interface JobOpening {
+  id: number;
+  title: string;
+  department: string;
+  location: string;
+  job_type: string;
+  experience: string;
+  qualification: string;
+  skills: string;
+  description: string;
+  last_date: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
 
 export default function CareersPage() {
+  const [jobs, setJobs] = useState<JobOpening[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  /* =======================================================
+     FETCH JOBS
+  ======================================================= */
+
+  async function fetchJobs() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Unable to load jobs. Status: ${response.status}`
+        );
+      }
+
+      const data: JobOpening[] = await response.json();
+
+      console.log("Career openings:", data);
+
+      setJobs(data);
+    } catch (err) {
+      console.error("Career API Error:", err);
+
+      setError(
+        "Unable to load current job openings. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  /* =======================================================
+     DATE FORMAT
+  ======================================================= */
+
+  function formatDate(date: string | null) {
+    if (!date) return "";
+
+    const parsedDate = new Date(`${date}T00:00:00`);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return date;
+    }
+
+    return parsedDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
   return (
     <>
       <Navbar />
 
-      <main>
-        {/* ================= HERO ================= */}
-        <section className="relative overflow-hidden bg-[#071521] pb-20 pt-36 text-white md:pb-28 md:pt-44 lg:pt-48">
-          <span className="pointer-events-none absolute -right-10 top-16 hidden select-none text-[230px] font-black leading-none tracking-[-0.08em] text-white/[0.025] xl:block">
-            06
-          </span>
+      <main className="bg-white">
+        {/* =================================================
+            HERO
+        ================================================= */}
 
-          <div className="absolute left-[8%] top-0 hidden h-full w-px bg-white/[0.06] xl:block" />
+        <section className="relative overflow-hidden bg-[#071521] pb-24 pt-36 text-white md:pb-32 md:pt-44">
+          {/* DECORATION */}
 
-          <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
-            <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-              <div>
-                <div className="flex items-center gap-3">
-                  <span className="h-[2px] w-10 bg-[#70d618]" />
+          <div className="absolute -right-40 top-0 h-[500px] w-[500px] rounded-full border border-white/[0.04]" />
 
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#70d618]">
-                    Careers at SPS
-                  </p>
-                </div>
+          <div className="absolute -right-20 top-20 h-[350px] w-[350px] rounded-full border border-white/[0.04]" />
 
-                <h1 className="mt-8 max-w-[1000px] text-5xl font-bold leading-[0.95] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-[84px]">
-                  Build structures.
-                  <span className="block text-[#70d618]">
-                    Build your career.
-                  </span>
-                </h1>
-              </div>
+          <div className="absolute left-[8%] top-0 hidden h-full w-px bg-white/[0.05] xl:block" />
 
-              <div className="border-l border-white/15 lg:pl-9">
-                <p className="max-w-[520px] text-[15px] leading-8 text-slate-300">
-                  Explore opportunities to work across engineering,
-                  fabrication, quality and structural project execution.
+          <div className="relative mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
+            <div className="max-w-[950px]">
+              <div className="flex items-center gap-3">
+                <span className="h-[2px] w-10 bg-[#70d618]" />
+
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#70d618]">
+                  Careers
                 </p>
-
-                <div className="mt-7 flex items-center gap-3">
-                  <span className="h-2 w-2 bg-[#70d618]" />
-
-                  <p className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-slate-400">
-                    Engineering • Fabrication • Execution
-                  </p>
-                </div>
               </div>
+
+              <h1 className="mt-7 text-5xl font-bold leading-[0.98] tracking-[-0.05em] md:text-7xl lg:text-[86px]">
+                Build your career
+                <span className="block text-slate-500">
+                  with SPS.
+                </span>
+              </h1>
+
+              <p className="mt-8 max-w-[700px] text-[15px] leading-8 text-slate-400 md:text-base">
+                Join SPS Engineering Solutions and work with a team
+                delivering engineering, fabrication and industrial
+                solutions for challenging projects.
+              </p>
+
+              <a
+                href="#openings"
+                className="group mt-10 inline-flex h-14 items-center justify-between gap-12 bg-[#70d618] px-6 text-[10px] font-extrabold uppercase tracking-[0.16em] !text-[#071521] transition hover:bg-white"
+              >
+                View Open Positions
+
+                <ArrowUpRight
+                  size={17}
+                  className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                />
+              </a>
             </div>
           </div>
         </section>
 
-        {/* ================= INTRO ================= */}
-        <section className="bg-[#f5f7f8] py-20 md:py-28">
-          <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
-            <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-              <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.28em] text-[#4fa900]">
+        {/* =================================================
+            INTRO
+        ================================================= */}
+
+        <section className="bg-white py-20 md:py-28">
+          <div className="mx-auto grid max-w-[1500px] gap-12 px-5 md:px-8 lg:grid-cols-[0.7fr_1.3fr] xl:px-12">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="h-[2px] w-8 bg-[#70d618]" />
+
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#4fa900]">
                   Work With Us
                 </p>
-
-                <h2 className="mt-5 max-w-[600px] text-4xl font-bold leading-[1.04] tracking-[-0.045em] text-[#071521] md:text-6xl">
-                  Work that becomes
-                  <span className="block text-slate-400">
-                    something real.
-                  </span>
-                </h2>
               </div>
 
-              <div className="lg:pt-3">
-                <p className="max-w-[720px] text-[15px] leading-8 text-slate-600">
-                  Industrial engineering connects drawings, materials,
-                  fabrication and people on site. Careers in this environment
-                  offer practical exposure to how structures move from
-                  planning to execution.
-                </p>
-
-                <p className="mt-5 max-w-[720px] text-[15px] leading-8 text-slate-600">
-                  We value people who approach their work with responsibility,
-                  technical curiosity and respect for quality and safety.
-                </p>
-
-                <div className="mt-10 flex items-center gap-5 border-t border-[#071521]/15 pt-7">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center bg-[#70d618] text-[#071521]">
-                    <Users size={23} strokeWidth={1.7} />
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#4fa900]">
-                      One Team
-                    </p>
-
-                    <p className="mt-1 text-lg font-bold text-[#071521]">
-                      Workshop to project site.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ================= DEPARTMENTS ================= */}
-        <section className="bg-white py-20 md:py-28">
-          <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
-            <div className="grid gap-10 border-b border-[#071521]/15 pb-14 lg:grid-cols-2 lg:items-end">
-              <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.28em] text-[#4fa900]">
-                  Where You Can Contribute
-                </p>
-
-                <h2 className="mt-5 text-4xl font-bold tracking-[-0.045em] text-[#071521] md:text-6xl">
-                  Different disciplines.
-                  <span className="block text-slate-400">
-                    One project goal.
-                  </span>
-                </h2>
-              </div>
-
-              <p className="max-w-[600px] text-[15px] leading-8 text-slate-600 lg:justify-self-end">
-                Industrial projects bring together technical and operational
-                teams across workshop and site environments.
+              <p className="mt-5 text-sm leading-7 text-slate-500">
+                SPS Engineering Solutions
               </p>
             </div>
 
-            <div className="mt-14 grid gap-px bg-[#071521]/15 md:grid-cols-2 xl:grid-cols-4">
-              {departments.map((department) => {
-                const Icon = department.icon;
+            <div>
+              <h2 className="max-w-[900px] text-3xl font-bold leading-[1.08] tracking-[-0.04em] text-[#071521] md:text-5xl">
+                Engineering careers built around
+                <span className="text-[#58b90c]">
+                  {" "}
+                  real projects and real responsibility.
+                </span>
+              </h2>
 
-                return (
-                  <article
-                    key={department.number}
-                    className="group min-h-[390px] bg-[#f8f9fa] p-7 transition-colors duration-500 hover:bg-[#071521] md:p-9"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex h-14 w-14 items-center justify-center border border-[#071521]/15 text-[#4fa900] transition-all duration-300 group-hover:border-[#70d618] group-hover:bg-[#70d618] group-hover:text-[#071521]">
-                        <Icon size={23} strokeWidth={1.6} />
-                      </div>
-
-                      <span className="text-[9px] font-black tracking-[0.18em] text-slate-400">
-                        {department.number}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-16 text-2xl font-bold text-[#071521] transition-colors group-hover:text-white">
-                      {department.title}
-                    </h3>
-
-                    <p className="mt-5 text-sm leading-7 text-slate-600 transition-colors group-hover:text-slate-400">
-                      {department.description}
-                    </p>
-
-                    <div className="mt-8 h-[2px] w-8 bg-[#70d618] transition-all duration-500 group-hover:w-16" />
-                  </article>
-                );
-              })}
+              <p className="mt-7 max-w-[850px] text-[15px] leading-8 text-slate-600">
+                We are looking for people who value quality,
+                collaboration and practical engineering. Whether you
+                work in engineering, project execution, fabrication
+                or operations, your contribution helps us deliver
+                reliable solutions to our clients.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* ================= CULTURE ================= */}
-        <section className="bg-[#071521] py-20 text-white md:py-28">
-          <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
-            <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-              <div>
-                <div className="lg:sticky lg:top-32">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.28em] text-[#70d618]">
-                    How We Work
-                  </p>
+        {/* =================================================
+            VALUES
+        ================================================= */}
 
-                  <h2 className="mt-5 max-w-[600px] text-4xl font-bold leading-[1.04] tracking-[-0.045em] md:text-6xl">
-                    Strong work starts
-                    <span className="block text-slate-500">
-                      with strong habits.
-                    </span>
-                  </h2>
-
-                  <p className="mt-7 max-w-[520px] text-sm leading-7 text-slate-400">
-                    The same discipline required to build industrial
-                    structures applies to how teams communicate, learn and
-                    take responsibility.
-                  </p>
-                </div>
-              </div>
-
-              <div className="border-t border-white/10">
-                {workPrinciples.map((item) => (
-                  <div
-                    key={item.number}
-                    className="group grid gap-5 border-b border-white/10 py-8 md:grid-cols-[70px_0.5fr_1fr] md:items-start md:py-10"
-                  >
-                    <span className="text-[10px] font-black tracking-[0.2em] text-[#70d618]">
-                      {item.number}
-                    </span>
-
-                    <h3 className="text-xl font-bold text-white md:text-2xl">
-                      {item.title}
-                    </h3>
-
-                    <p className="max-w-[520px] text-sm leading-7 text-slate-400">
-                      {item.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ================= OPEN POSITIONS ================= */}
         <section className="bg-[#f5f7f8] py-20 md:py-28">
           <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
-            <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-              <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.28em] text-[#4fa900]">
-                  Join The Team
-                </p>
-
-                <h2 className="mt-5 max-w-[600px] text-4xl font-bold leading-[1.04] tracking-[-0.045em] text-[#071521] md:text-6xl">
-                  Career
-                  <span className="block text-slate-400">
-                    opportunities.
-                  </span>
-                </h2>
-              </div>
-
-              <div className="bg-white p-7 shadow-[0_20px_60px_rgba(7,21,33,0.06)] md:p-10 lg:p-12">
-                <div className="flex h-14 w-14 items-center justify-center bg-[#eaf7df] text-[#4fa900]">
-                  <BriefcaseBusiness size={24} strokeWidth={1.7} />
-                </div>
-
-                <p className="mt-8 text-[9px] font-extrabold uppercase tracking-[0.22em] text-[#4fa900]">
-                  Open Positions
-                </p>
-
-                <h3 className="mt-3 text-3xl font-bold tracking-[-0.04em] text-[#071521]">
-                  Interested in joining SPS?
-                </h3>
-
-                <p className="mt-5 max-w-[650px] text-sm leading-7 text-slate-600">
-                  Current opportunities can be shared here as positions become
-                  available. You can also contact our team regarding career
-                  enquiries.
-                </p>
-
-                <Link
-                  href="/contact"
-                  className="group mt-8 inline-flex h-14 items-center gap-10 bg-[#071521] px-6 text-[10px] font-extrabold uppercase tracking-[0.15em] !text-white transition hover:bg-[#70d618] hover:!text-[#071521]"
-                >
-                  Career Enquiry
-
-                  <ArrowUpRight
-                    size={17}
-                    className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
-                  />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ================= CTA ================= */}
-        <section className="relative overflow-hidden bg-[#70d618]">
-          <div className="pointer-events-none absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-[150px] font-black tracking-[-0.07em] text-[#071521]/[0.035] xl:block">
-            BUILD WITH US
-          </div>
-
-          <div className="relative mx-auto grid max-w-[1500px] gap-10 px-5 py-16 md:px-8 md:py-20 lg:grid-cols-[1fr_auto] lg:items-center xl:px-12">
-            <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#071521]/60">
-                SPS Engineering
+            <div className="mb-12">
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#4fa900]">
+                Why SPS
               </p>
 
-              <h2 className="mt-4 max-w-[850px] text-3xl font-bold leading-tight tracking-[-0.045em] text-[#071521] md:text-5xl">
-                Ready to build your
-                <span className="block">next chapter?</span>
+              <h2 className="mt-4 text-3xl font-bold tracking-[-0.04em] text-[#071521] md:text-5xl">
+                Where you can contribute.
               </h2>
             </div>
 
-            <Link
-              href="/contact"
-              className="group inline-flex h-16 items-center justify-between gap-12 bg-[#071521] px-7 text-[10px] font-extrabold uppercase tracking-[0.16em] !text-white transition hover:bg-white hover:!text-[#071521]"
+            <div className="grid border-l border-t border-[#071521]/10 md:grid-cols-3">
+              <div className="border-b border-r border-[#071521]/10 bg-white p-8 md:p-10">
+                <p className="text-[10px] font-black tracking-[0.2em] text-[#4fa900]">
+                  01
+                </p>
+
+                <h3 className="mt-8 text-xl font-bold text-[#071521]">
+                  Engineering
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-600">
+                  Work on practical engineering challenges and
+                  contribute to solutions designed for real industrial
+                  requirements.
+                </p>
+              </div>
+
+              <div className="border-b border-r border-[#071521]/10 bg-white p-8 md:p-10">
+                <p className="text-[10px] font-black tracking-[0.2em] text-[#4fa900]">
+                  02
+                </p>
+
+                <h3 className="mt-8 text-xl font-bold text-[#071521]">
+                  Project Execution
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-600">
+                  Coordinate teams, schedules and site activities to
+                  help projects move safely and efficiently from plan
+                  to completion.
+                </p>
+              </div>
+
+              <div className="border-b border-r border-[#071521]/10 bg-white p-8 md:p-10">
+                <p className="text-[10px] font-black tracking-[0.2em] text-[#4fa900]">
+                  03
+                </p>
+
+                <h3 className="mt-8 text-xl font-bold text-[#071521]">
+                  Fabrication & Operations
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-600">
+                  Turn engineering requirements into quality
+                  fabrication and dependable industrial execution.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================
+            CURRENT OPENINGS
+        ================================================= */}
+
+        <section
+          id="openings"
+          className="scroll-mt-24 bg-white py-20 md:py-28"
+        >
+          <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
+            {/* HEADER */}
+
+            <div className="grid gap-8 border-b border-[#071521]/15 pb-10 lg:grid-cols-[1fr_auto] lg:items-end">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="h-[2px] w-8 bg-[#70d618]" />
+
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#4fa900]">
+                    Join The Team
+                  </p>
+                </div>
+
+                <h2 className="mt-5 text-4xl font-bold tracking-[-0.045em] text-[#071521] md:text-6xl">
+                  Current openings.
+                </h2>
+
+                <p className="mt-5 max-w-[650px] text-sm leading-7 text-slate-500">
+                  Explore current opportunities at SPS Engineering
+                  Solutions and find the position that matches your
+                  experience.
+                </p>
+              </div>
+
+              {!loading && !error && jobs.length > 0 && (
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Open Positions
+                  </p>
+
+                  <p className="mt-2 text-3xl font-bold text-[#071521]">
+                    {jobs.length.toString().padStart(2, "0")}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* =============================================
+                LOADING
+            ============================================= */}
+
+            {loading && (
+              <div className="flex min-h-[300px] items-center justify-center">
+                <div className="text-center">
+                  <Loader2
+                    size={30}
+                    className="mx-auto animate-spin text-[#4fa900]"
+                  />
+
+                  <p className="mt-5 text-sm text-slate-500">
+                    Loading current opportunities...
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* =============================================
+                ERROR
+            ============================================= */}
+
+            {!loading && error && (
+              <div className="mt-10 border border-red-200 bg-red-50 p-8 md:p-10">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">
+                  Unable To Load Openings
+                </p>
+
+                <p className="mt-3 text-sm leading-7 text-red-700">
+                  {error}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={fetchJobs}
+                  className="mt-6 inline-flex cursor-pointer items-center gap-3 bg-[#071521] px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white transition hover:bg-[#70d618] hover:text-[#071521]"
+                >
+                  <RefreshCw size={15} />
+
+                  Try Again
+                </button>
+              </div>
+            )}
+
+            {/* =============================================
+                EMPTY
+            ============================================= */}
+
+            {!loading && !error && jobs.length === 0 && (
+              <div className="mt-10 bg-[#f5f7f8] p-10 text-center md:p-16">
+                <BriefcaseBusiness
+                  size={34}
+                  strokeWidth={1.4}
+                  className="mx-auto text-[#4fa900]"
+                />
+
+                <h3 className="mt-6 text-2xl font-bold text-[#071521]">
+                  No current openings.
+                </h3>
+
+                <p className="mx-auto mt-4 max-w-[550px] text-sm leading-7 text-slate-500">
+                  We do not have any active positions at the moment.
+                  Please check this page again for future opportunities.
+                </p>
+              </div>
+            )}
+
+            {/* =============================================
+                JOBS
+            ============================================= */}
+
+            {!loading && !error && jobs.length > 0 && (
+              <div className="mt-10 grid gap-5">
+                {jobs.map((job, index) => (
+                  <article
+                    key={job.id}
+                    className="group border border-[#071521]/10 bg-[#f7f8f9] transition duration-300 hover:border-[#70d618] hover:bg-white hover:shadow-[0_20px_60px_rgba(7,21,33,0.07)]"
+                  >
+                    <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[70px_1fr_auto] lg:items-center lg:p-10">
+                      {/* NUMBER */}
+
+                      <div className="hidden lg:block">
+                        <p className="text-[10px] font-black tracking-[0.2em] text-slate-400">
+                          {(index + 1).toString().padStart(2, "0")}
+                        </p>
+                      </div>
+
+                      {/* JOB CONTENT */}
+
+                      <div>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#4fa900]">
+                            {job.department || "SPS Engineering"}
+                          </p>
+
+                          {job.job_type && (
+                            <>
+                              <span className="h-1 w-1 rounded-full bg-slate-300" />
+
+                              <p className="text-[9px] font-black uppercase tracking-[0.16em] text-slate-400">
+                                {job.job_type}
+                              </p>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="mt-4 text-2xl font-bold tracking-[-0.03em] text-[#071521] transition group-hover:text-[#4fa900] md:text-3xl">
+                          {job.title}
+                        </h3>
+
+                        {/* JOB META */}
+
+                        <div className="mt-6 flex flex-wrap gap-x-7 gap-y-4">
+                          {job.location && (
+                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                              <MapPin
+                                size={15}
+                                className="text-[#4fa900]"
+                              />
+
+                              {job.location}
+                            </div>
+                          )}
+
+                          {job.experience && (
+                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                              <BriefcaseBusiness
+                                size={15}
+                                className="text-[#4fa900]"
+                              />
+
+                              {job.experience}
+                            </div>
+                          )}
+
+                          {job.qualification && (
+                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                              <GraduationCap
+                                size={16}
+                                className="text-[#4fa900]"
+                              />
+
+                              {job.qualification}
+                            </div>
+                          )}
+
+                          {job.last_date && (
+                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                              <CalendarDays
+                                size={15}
+                                className="text-[#4fa900]"
+                              />
+
+                              Apply by {formatDate(job.last_date)}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* DESCRIPTION */}
+
+                        {job.description && (
+                          <p className="mt-6 max-w-[850px] text-sm leading-7 text-slate-500">
+                            {job.description.length > 180
+                              ? `${job.description.substring(0, 180)}...`
+                              : job.description}
+                          </p>
+                        )}
+
+                        {/* SKILLS */}
+
+                        {job.skills && (
+                          <p className="mt-4 text-xs leading-6 text-slate-400">
+                            <span className="font-bold text-[#071521]">
+                              Skills:
+                            </span>{" "}
+                            {job.skills}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* BUTTON */}
+
+                      <div>
+                        <Link
+                          href={`/careers/${job.id}`}
+                          className="group/button inline-flex h-14 min-w-[190px] items-center justify-between gap-8 bg-[#071521] px-5 text-[9px] font-extrabold uppercase tracking-[0.15em] !text-white transition hover:bg-[#70d618] hover:!text-[#071521]"
+                        >
+                          View Position
+
+                          <ArrowUpRight
+                            size={16}
+                            className="transition-transform duration-300 group-hover/button:-translate-y-1 group-hover/button:translate-x-1"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* =================================================
+            BOTTOM CTA
+        ================================================= */}
+
+        <section className="bg-[#071521] py-20 text-white md:py-24">
+          <div className="mx-auto grid max-w-[1500px] gap-10 px-5 md:px-8 lg:grid-cols-[1fr_auto] lg:items-center xl:px-12">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#70d618]">
+                SPS Engineering Solutions
+              </p>
+
+              <h2 className="mt-5 max-w-[800px] text-3xl font-bold leading-[1.08] tracking-[-0.04em] md:text-5xl">
+                Ready to build something meaningful with us?
+              </h2>
+
+              <p className="mt-5 max-w-[650px] text-sm leading-7 text-slate-400">
+                Explore our current opportunities and apply for a
+                position that matches your experience and skills.
+              </p>
+            </div>
+
+            <a
+              href="#openings"
+              className="group inline-flex h-16 items-center justify-between gap-12 bg-[#70d618] px-7 text-[10px] font-extrabold uppercase tracking-[0.16em] !text-[#071521] transition hover:bg-white"
             >
-              Contact Us
+              Explore Openings
 
               <ArrowUpRight
                 size={18}
                 className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
               />
-            </Link>
+            </a>
           </div>
         </section>
       </main>
