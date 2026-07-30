@@ -1,0 +1,4 @@
+[build]
+  base = "erection-fabrication"
+  command = "npm run build"
+  publish = "out"
