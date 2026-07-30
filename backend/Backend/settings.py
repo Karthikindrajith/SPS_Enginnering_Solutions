@@ -250,8 +250,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-
-    # Frontend Render URL later inga add pannuvom.
+    "https://sps-enginnering-solutions.onrender.com",
 ]
 
 
