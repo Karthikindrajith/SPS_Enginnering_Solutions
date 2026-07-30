@@ -75,7 +75,7 @@ JAZZMIN_SETTINGS = {
     "site_header": "SPS Engineering Solutions",
     "site_brand": "SPS Engineering",
 
-    # "site_logo": "images/sps-final-logo.png",
+
 
     "welcome_sign": "Welcome to SPS Engineering Solutions",
     "copyright": "SPS Engineering Solutions",
