@@ -1,8 +1,10 @@
 """
-Django settings for Backend project.
+Django settings for SPS Engineering Backend.
 """
 
+import os
 from pathlib import Path
+
 
 # =========================================================
 # BASE DIRECTORY
@@ -15,14 +17,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # =========================================================
 
-SECRET_KEY = 'django-insecure-&l__4**9bebe+wb($!*t&!e7lc=qjd^!2+oqf=+a7k43osk5ow'
+# Local development-ku fallback key.
+# Production Render-la DJANGO_SECRET_KEY environment variable set pannunga.
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-change-this-key-for-local-development"
+)
 
-# Development-ku True.
-# Production final setup-la False + environment variable setup pannuvom.
-DEBUG = True
+# Local:
+# DEBUG=True
+#
+# Render production:
+# DEBUG=False
+DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+
 
 ALLOWED_HOSTS = [
+    # Render backend
     "sps-backend-46ml.onrender.com",
+
+    # Custom backend domain
+    "backend.spsengineeringsolutions.site",
+
+    # Local development
     "localhost",
     "127.0.0.1",
 ]
@@ -59,7 +76,6 @@ JAZZMIN_SETTINGS = {
     "site_brand": "SPS Engineering",
 
     "site_logo": "images/sps-final-logo.png",
-    # "login_logo": "images/sps-final-logo.png",
 
     "welcome_sign": "Welcome to SPS Engineering Solutions",
     "copyright": "SPS Engineering Solutions",
@@ -90,7 +106,7 @@ JAZZMIN_SETTINGS = {
     "usermenu_links": [
         {
             "name": "SPS Website",
-            "url": "http://localhost:3000",
+            "url": "https://spsengineeringsolutions.site",
             "new_window": True,
         },
     ],
@@ -136,6 +152,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_fixed": True,
 
     "sidebar": "sidebar-dark-lime",
+
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": True,
@@ -162,12 +179,13 @@ JAZZMIN_UI_TWEAKS = {
 # =========================================================
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-
     "django.middleware.security.SecurityMiddleware",
 
-    # Serve static files in production
+    # WhiteNoise should come directly after SecurityMiddleware
     "whitenoise.middleware.WhiteNoiseMiddleware",
+
+    # CORS
+    "corsheaders.middleware.CorsMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -248,10 +266,33 @@ AUTH_PASSWORD_VALIDATORS = [
 # =========================================================
 
 CORS_ALLOWED_ORIGINS = [
+    # Local frontend
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+
+    # Production frontend
     "https://spsengineeringsolutions.site",
-    # "https://sps-enginnering-solutions.onrender.com",
+    "https://www.spsengineeringsolutions.site",
+
+    # Old Render frontend - optional
+    "https://sps-enginnering-solutions.onrender.com",
+]
+
+
+# =========================================================
+# CSRF TRUSTED ORIGINS
+# =========================================================
+
+CSRF_TRUSTED_ORIGINS = [
+    # Production frontend
+    "https://spsengineeringsolutions.site",
+    "https://www.spsengineeringsolutions.site",
+
+    # Custom backend
+    "https://backend.spsengineeringsolutions.site",
+
+    # Render backend
+    "https://sps-backend-46ml.onrender.com",
 ]
 
 
@@ -279,6 +320,29 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+
+# WhiteNoise static file storage
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+
+# =========================================================
+# HTTPS / PROXY
+# =========================================================
+
+# Render terminates HTTPS before forwarding requests to Django.
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
 
 
 # =========================================================

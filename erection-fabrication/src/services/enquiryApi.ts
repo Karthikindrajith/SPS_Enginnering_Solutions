@@ -21,7 +21,7 @@ export async function createEnquiry(
   data: EnquiryData
 ): Promise<EnquiryResponse> {
   const response = await fetch(
-    "https://sps-backend-46ml.onrender.com/api/enquiries/",
+    "https://backend.spsengineeringsolutions.site/api/enquiries/",
     {
       method: "POST",
       headers: {
