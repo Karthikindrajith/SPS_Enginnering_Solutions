@@ -23,6 +23,29 @@ import ApplyForm from "./ApplyForm";
 const API_URL =
   "https://backend.spsengineeringsolutions.site/api/careers/";
 
+export async function generateStaticParams() {
+  try {
+    const response = await fetch(
+      "https://backend.spsengineeringsolutions.site/api/careers/",
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const jobs: { id: number }[] = await response.json();
+
+    return jobs.map((job) => ({
+      id: job.id.toString(),
+    }));
+  } catch {
+    return [];
+  }
+}
+
 
 /* =========================================================
    TYPES
