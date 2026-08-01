@@ -126,7 +126,7 @@ export default function Footer() {
                 ==================================== */}
 
                 <a
-                  href="https://www.instagram.com/YOUR_USERNAME"
+                  href="https://www.instagram.com/spsengineeringsolutions?igsh=MTJvbXRzbHZrZTJoNg==&utm_source=ig_contact_invite"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
@@ -147,7 +147,7 @@ export default function Footer() {
                 ==================================== */}
 
                 <a
-                  href="https://wa.me/91XXXXXXXXXX"
+                  href="https://wa.me/919360245647"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="WhatsApp"
@@ -168,7 +168,7 @@ export default function Footer() {
                 ==================================== */}
 
                 <a
-                  href="https://www.linkedin.com/company/YOUR_COMPANY"
+                  href="https://www.linkedin.com/in/shanavas-sadikbash-18631b244"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"
@@ -271,6 +271,9 @@ export default function Footer() {
       <br />
       Chennai,Tamil Nadu 600083
       <br />
+      Contact Number : +91 9360245647
+      <br/>
+       
       India
     </p>
   </div>
@@ -323,17 +326,17 @@ export default function Footer() {
 
             {/* START PROJECT */}
 
-            <Link
-              href="/contact"
-              className="group mt-9 inline-flex items-center gap-3 border-b border-[#70d618] pb-2 text-[9px] font-extrabold uppercase tracking-[0.18em] !text-white transition-colors duration-300 hover:!text-[#70d618]"
-            >
-              For the Enquiry
+          <Link
+  href="/contact"
+  className="group mt-9 inline-flex items-center gap-3 border-b border-[#70d618] pb-2 text-[13px] font-bold uppercase tracking-[0.08em] !text-white transition-colors duration-300 hover:!text-[#70d618]"
+>
+  For the Enquiry and More Details, Please Contact Us
 
-              <ArrowUpRight
-                size={14}
-                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </Link>
+  <ArrowUpRight
+    size={16}
+    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+  />
+</Link>
           </div>
         </div>
 

@@ -395,12 +395,14 @@ export default function Navbar() {
             : "invisible translate-x-full opacity-0"
         }`}
       >
-        <div className="flex h-screen flex-col overflow-y-auto">
+        {/* <div className="flex h-screen flex-col overflow-y-auto"> */}
+        <div className="relative isolate flex h-screen flex-col overflow-y-auto bg-[#071521]">
           {/* ===============================================
               MOBILE TOP
           =============================================== */}
 
-          <div className="flex h-20 shrink-0 items-center justify-between border-b border-white/10 px-5 md:px-8">
+          {/* <div className="flex h-20 shrink-0 items-center justify-between border-b border-white/10 px-5 md:px-8"> */}
+          <div className="relative z-10 flex h-20 shrink-0 items-center justify-between border-b border-white/10 bg-[#071521] px-5 md:px-8">
             {/* Mobile Logo */}
 
             <Link
@@ -460,7 +462,8 @@ export default function Navbar() {
               MOBILE NAVIGATION
           =============================================== */}
 
-          <nav className="flex-1 px-5 py-8 md:px-8">
+          {/* <nav className="flex-1 px-5 py-8 md:px-8"> */}
+          <nav className="relative z-10 flex-1 bg-[#071521] px-5 py-8 md:px-8">
             <MobileLink
               number="01"
               label="Home"
@@ -587,7 +590,8 @@ export default function Navbar() {
               MOBILE CTA
           =============================================== */}
 
-          <div className="border-t border-white/10 p-5 md:p-8">
+          {/* <div className="border-t border-white/10 p-5 md:p-8"> */}
+          <div className="relative z-10 border-t border-white/10 bg-[#071521] p-5 md:p-8">
             <Link
               href="/contact"
               onClick={() => setMenuOpen(false)}
